@@ -1,7 +1,6 @@
 ﻿using System.Drawing;
 using System.Windows;
 using System.Windows.Forms;
-using QuickGPT.Logic;
 using QuickGPT.Windows;
 
 namespace QuickGPT
