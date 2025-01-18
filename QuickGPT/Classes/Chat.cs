@@ -3,12 +3,14 @@ using System.Net.Http;
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using QuickGPT.Classes;
 
 namespace QuickGPT.Logic
 {
     internal class Chat
     {
         private readonly ChatWindow chatWindow;
+        private readonly Settings settings;
 
         private readonly HttpClient httpClient;
         private readonly List<Dictionary<string, string>> messages;
@@ -20,14 +22,15 @@ namespace QuickGPT.Logic
         public Chat(ChatWindow chatWindow)
         {
             this.chatWindow = chatWindow;
+            settings = SettingsManager.GetSettings();
 
             // Setup httpClient with headers
             httpClient = new();
-            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {Settings.OPENAI_API_KEY}");
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {settings.OPENAI_API_KEY}");
 
             // Setup messages
             messages = [];
-            AddMessageToHistory("system", Settings.SYSTEM_MESSAGE);
+            AddMessageToHistory("system", settings.SYSTEM_MESSAGE);
         }
 
         /**
@@ -42,12 +45,12 @@ namespace QuickGPT.Logic
             // Create request
             var requestBody = new
             {
-                model = Settings.OPENAI_MODEL,
+                model = settings.OPENAI_MODEL,
                 messages,
                 stream = true
             };
 
-            using HttpRequestMessage request = new(HttpMethod.Post, Settings.OPENAI_API_URL)
+            using HttpRequestMessage request = new(HttpMethod.Post, settings.OPENAI_API_URL)
             {
                 Content = new StringContent(System.Text.Json.JsonSerializer.Serialize(requestBody), Encoding.UTF8, "application/json")
             };
@@ -84,7 +87,7 @@ namespace QuickGPT.Logic
                     {
                         chunkStringBuilder.Append(chunk);
                         answerStringBuilder.Append(chunk);
-                        if (chunkStringBuilder.Length > Settings.UPDATE_INTERVAL)
+                        if (chunkStringBuilder.Length > settings.UPDATE_INTERVAL)
                         {
                             await chatWindow.StreamResponseCallback(chunkStringBuilder.ToString());
                             chunkStringBuilder = new StringBuilder();

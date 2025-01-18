@@ -1,12 +1,11 @@
-﻿namespace QuickGPT.Logic
+﻿namespace QuickGPT.Classes
 {
     internal class Settings
     {
-        public const string OPENAI_API_KEY = "your-token";
-        public const string OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
-        public const string OPENAI_MODEL = "gpt-3.5-turbo";
-
-        public const string SYSTEM_MESSAGE = "You are a helpful assistant. Keep your answers short, simple and informative.";
-        public const int UPDATE_INTERVAL = 30;
+        public string OPENAI_API_KEY { get; set; }
+        public string OPENAI_API_URL { get; set; }
+        public string OPENAI_MODEL { get; set; }
+        public string SYSTEM_MESSAGE { get; set; }
+        public int UPDATE_INTERVAL { get; set; }
     }
 }

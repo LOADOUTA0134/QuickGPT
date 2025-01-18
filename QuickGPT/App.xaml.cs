@@ -1,8 +1,12 @@
-﻿using System.Windows;
+﻿using System.Drawing;
+using System.Windows;
+using System.Windows.Forms;
+using QuickGPT.Logic;
+using QuickGPT.Windows;
 
 namespace QuickGPT
 {
-    public partial class App : Application
+    public partial class App : System.Windows.Application
     {
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -10,11 +14,32 @@ namespace QuickGPT
 
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
-            // Wait for keyboard shortcut
+            CreateTrayIcon();
 
-            PromptWindow promtWindow = new();
-            promtWindow.Show();
+            // TODO Wait for keyboard shortcut to open prompt
+        }
+
+        private void CreateTrayIcon()
+        {
+            NotifyIcon trayIcon = new()
+            {
+                Icon = SystemIcons.Application, // TODO
+                Text = "QuickGPT",
+                Visible = true,
+                ContextMenuStrip = new ContextMenuStrip()
+            };
+
+            trayIcon.ContextMenuStrip.Items.Add("Open Prompt", null, (s, e) =>
+            {
+                PromptWindow promtWindow = new();
+                promtWindow.Show();
+            });
+            trayIcon.ContextMenuStrip.Items.Add("Settings", null, (s, e) =>
+            {
+                SettingsWindow settingsWindow = new();
+                settingsWindow.Show();
+            });
+            trayIcon.ContextMenuStrip.Items.Add("Exit", null, (s, e) => Shutdown());
         }
     }
-
 }
