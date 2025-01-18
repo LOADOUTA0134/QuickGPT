@@ -68,13 +68,25 @@
                  Padding="5"
                  BorderThickness="0"/>
 
-        <Button Content="Save Changes"
-                Margin="10"
-                Width="200"
-                Height="30"
-                Background="#545454"
-                Foreground="White"
-                BorderThickness="0"
-                Click="Button_Click_Save"/>
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Center">
+            <Button Content="Save Changes"
+                    Margin="10"
+                    Width="200"
+                    Height="30"
+                    Background="#545454"
+                    Foreground="White"
+                    BorderThickness="0"
+                    Click="Button_Click_Save"/>
+
+            <Button Content="Reset Settings"
+                    Margin="10"
+                    Width="180"
+                    Height="30"
+                    Background="#6d3636"
+                    Foreground="White"
+                    BorderThickness="0"
+                    Click="Button_Click_Reset"/>
+        </StackPanel>
     </StackPanel>
 </Window>

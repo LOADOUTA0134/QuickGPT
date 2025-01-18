@@ -27,6 +27,12 @@ namespace QuickGPT.Logic
             File.WriteAllText(SETTINGS_FILE_PATH, json);
         }
 
+        public static void ResetSettings()
+        {
+            settings = GetDefaultSettings();
+            SaveSettings(settings);
+        }
+
         private static Settings LoadSettings()
         {
             if (!Directory.Exists(SETTINGS_DIRECTORY_PATH))
@@ -59,7 +65,7 @@ namespace QuickGPT.Logic
             {
                 OPENAI_API_KEY = "your-api-key",
                 OPENAI_API_URL = "https://api.openai.com/v1/chat/completions",
-                OPENAI_MODEL = "gpt-3.5-turbo",
+                OPENAI_MODEL = "gpt-4o",
                 SYSTEM_MESSAGE = "You are a helpful assistant. Keep your answers short, simple and informative.",
                 UPDATE_INTERVAL = 30
             };

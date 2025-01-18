@@ -10,6 +10,11 @@ namespace QuickGPT.Windows
         {
             InitializeComponent();
 
+            LoadSettings();
+        }
+
+        private void LoadSettings()
+        {
             Settings settings = SettingsManager.GetSettings();
             TextBoxOpenAiApiKey.Text = settings.OPENAI_API_KEY;
             TextBoxOpenAiApiUrl.Text = settings.OPENAI_API_URL;
@@ -37,7 +42,15 @@ namespace QuickGPT.Windows
 
             SettingsManager.SaveSettings(settings);
 
-            MessageBox.Show("Settings have been saved");
+            MessageBox.Show("Settings have been saved.");
+        }
+
+        private void Button_Click_Reset(object sender, RoutedEventArgs e)
+        {
+            SettingsManager.ResetSettings();
+            LoadSettings();
+
+            MessageBox.Show("Settings have been reset.");
         }
     }
 }
