@@ -57,7 +57,13 @@ namespace QuickGPT.Logic
 
             // Make request
             using HttpResponseMessage response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, CancellationToken.None);
-            response.EnsureSuccessStatusCode();
+            
+            if (!response.IsSuccessStatusCode)
+            {
+                string errorMessage = $"Request failed with status code {response.StatusCode}. Make sure the settings are correct.";
+                chatWindow.ErrorCallback(errorMessage);
+                return;
+            }
 
             // Get response
             using Stream stream = await response.Content.ReadAsStreamAsync();

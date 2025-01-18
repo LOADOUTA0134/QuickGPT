@@ -43,6 +43,11 @@ namespace QuickGPT
             }, DispatcherPriority.Render);
         }
 
+        public void ErrorCallback(string message)
+        {
+            SendMessage(message, false);
+        }
+
         /**
          * KeyDown Event, waits for enter so the new message can be sent
          */
