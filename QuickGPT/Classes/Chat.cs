@@ -8,11 +8,15 @@ namespace QuickGPT.Logic
 {
     internal class Chat
     {
-        private ChatWindow chatWindow;
+        private readonly ChatWindow chatWindow;
 
         private readonly HttpClient httpClient;
         private readonly List<Dictionary<string, string>> messages;
 
+        /**
+         * Constructor is called by chat window when new chat is being opened
+         * Creates http client with headers & message history object
+         */
         public Chat(ChatWindow chatWindow)
         {
             this.chatWindow = chatWindow;
@@ -26,6 +30,10 @@ namespace QuickGPT.Logic
             AddMessageToHistory("system", Settings.SYSTEM_MESSAGE);
         }
 
+        /**
+         * This is the big function that gives the app it's functionality
+         * Creates the request, adds user & assistant message to history and calls callback method in chat window
+         */
         public async Task StreamResponseAsync(string message)
         {
             // Add message to history
@@ -39,7 +47,7 @@ namespace QuickGPT.Logic
                 stream = true
             };
 
-            using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, Settings.OPENAI_API_URL)
+            using HttpRequestMessage request = new(HttpMethod.Post, Settings.OPENAI_API_URL)
             {
                 Content = new StringContent(System.Text.Json.JsonSerializer.Serialize(requestBody), Encoding.UTF8, "application/json")
             };
@@ -48,9 +56,11 @@ namespace QuickGPT.Logic
             using HttpResponseMessage response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, CancellationToken.None);
             response.EnsureSuccessStatusCode();
 
+            // Get response
             using Stream stream = await response.Content.ReadAsStreamAsync();
             using StreamReader reader = new(stream);
 
+            // Read stream until end
             StringBuilder answerStringBuilder = new();
             StringBuilder chunkStringBuilder = new();
             while (!reader.EndOfStream)
@@ -69,7 +79,7 @@ namespace QuickGPT.Logic
                         break;
                     }
 
-                    string chunk = Json2Str(jsonStr);
+                    string chunk = GetContentFromJsonStr(jsonStr);
                     if (!string.IsNullOrEmpty(chunk))
                     {
                         chunkStringBuilder.Append(chunk);
@@ -84,6 +94,9 @@ namespace QuickGPT.Logic
             }
         }
 
+        /**
+         * Adds message to history
+         */
         private void AddMessageToHistory(string role, string message)
         {
             message = message.Trim();
@@ -96,7 +109,11 @@ namespace QuickGPT.Logic
             );
         }
 
-        private string Json2Str(string jsonStr)
+        /**
+         * Gets the content from the openai json string
+         * Returns either the chunk or an empty string
+         */
+        private string GetContentFromJsonStr(string jsonStr)
         {
             try
             {

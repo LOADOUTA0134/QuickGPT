@@ -11,6 +11,9 @@ namespace QuickGPT
             TextBoxPrompt.Focus();
         }
 
+        /**
+         * Waits for enter to open chat window that will then perform the openai call etc.
+         */
         private void TextBoxPrompt_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key != System.Windows.Input.Key.Enter)
@@ -21,11 +24,14 @@ namespace QuickGPT
             ChatWindow chatWindow = new(TextBoxPrompt.Text);
             chatWindow.Show();
 
-            // This is not needed here because focus is lost when opening new window.
-            // Keep in mind that this is needed maybe if some handling with the lost focus is changed
+            // Close() is not needed here because focus is lost when opening new window (and closes this window then).
+            // Keep in mind that Close() is needed maybe if some handling with the lost focus is changed
             //Close();
         }
 
+        /**
+         * Close window if focus is lost
+         */
         private void Window_LostKeyboardFocus(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
         {
             Close();
