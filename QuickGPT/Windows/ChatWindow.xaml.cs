@@ -67,7 +67,7 @@ namespace QuickGPT
                 Padding = new Thickness(10),
                 Margin = new Thickness(5),
                 HorizontalAlignment = isUser ? HorizontalAlignment.Right : HorizontalAlignment.Left,
-                Background = isUser ? Brushes.Gray : Brushes.DimGray,
+                Background = new SolidColorBrush(Color.FromRgb(84, 84, 84)),
                 BorderThickness = new Thickness(0)
             };
 

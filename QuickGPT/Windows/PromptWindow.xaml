@@ -7,12 +7,15 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None" ResizeMode="NoResize"
+        Background="#545454"
         Title="PromptWindow" Height="50" Width="600"
         LostKeyboardFocus="Window_LostKeyboardFocus">
     <Grid>
         <TextBox x:Name="TextBoxPrompt"
                  FontFamily="Cascadia Mono"
                  FontSize="20"
+                 Background="#545454"
+                 Foreground="White"
                  VerticalAlignment="Center"
                  Padding="10"
                  BorderThickness="0"
