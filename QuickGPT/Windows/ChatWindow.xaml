@@ -27,7 +27,7 @@
                  Padding="7"
                  VerticalAlignment="Center"
                  BorderThickness="0"
-                 Background="DimGray"
+                 Background="Gray"
                  Foreground="White"
                  KeyDown="MessageTextBox_KeyDown"/>
     </Grid>

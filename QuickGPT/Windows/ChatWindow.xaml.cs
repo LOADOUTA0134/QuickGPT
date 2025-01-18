@@ -1,11 +1,17 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Threading;
+using QuickGPT.Logic;
 
 namespace QuickGPT
 {
     public partial class ChatWindow : Window
     {
+        private readonly Chat chat;
+        private TextBox? currentTextBox; // used for editing, usually null except it's being used
+
         public ChatWindow(string prompt)
         {
             InitializeComponent();
@@ -13,7 +19,21 @@ namespace QuickGPT
             SendMessage(prompt, true);
             MessageTextBox.Focus();
 
-            // TODO Prompt openai and get message
+            chat = new(this);
+            _ = chat.StreamResponseAsync(prompt);
+        }
+
+        public async Task StreamResponseCallback(string chunk)
+        {
+            await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                if (currentTextBox == null)
+                {
+                    currentTextBox = SendMessage(chunk, false);
+                    return;
+                }
+                EditMessage(currentTextBox, chunk);
+            }, DispatcherPriority.Render);
         }
 
         private void MessageTextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
@@ -28,28 +48,37 @@ namespace QuickGPT
             }
 
             SendMessage(MessageTextBox.Text, true);
-            MessageTextBox.Clear();
 
-            // TODO Prompt openai and get message
+            _ = chat.StreamResponseAsync(MessageTextBox.Text);
+
+            MessageTextBox.Clear();
         }
 
-        private void SendMessage(string message, bool isUser)
+        private TextBox SendMessage(string message, bool isUser)
         {
+            if (isUser)
+            {
+                currentTextBox = null;
+            }
+
             Border messageBorder = new()
             {
                 CornerRadius = new CornerRadius(10),
                 Padding = new Thickness(10),
                 Margin = new Thickness(5),
                 HorizontalAlignment = isUser ? HorizontalAlignment.Right : HorizontalAlignment.Left,
-                Background = isUser ? Brushes.DimGray : Brushes.Gray,
+                Background = isUser ? Brushes.Gray : Brushes.DimGray,
                 BorderThickness = new Thickness(0)
             };
 
-            TextBlock messageTextBlock = new()
+            TextBox messageTextBlock = new()
             {
                 TextWrapping = TextWrapping.Wrap,
                 Text = message,
-                Foreground = Brushes.White
+                IsReadOnly = true,
+                Foreground = Brushes.White,
+                BorderThickness = new Thickness(0),
+                Background = Brushes.Transparent
             };
 
             messageBorder.Child = messageTextBlock;
@@ -57,6 +86,13 @@ namespace QuickGPT
             MessagesStackPanel.Children.Add(messageBorder);
 
             MessagesScrollViewer.ScrollToBottom();
+
+            return messageTextBlock;
+        }
+
+        private void EditMessage(TextBox textBlock, string chunk)
+        {
+            textBlock.Text += chunk;
         }
     }
 }
