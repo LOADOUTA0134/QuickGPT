@@ -8,11 +8,11 @@ namespace QuickGPT
         {
             base.OnStartup(e);
 
-            ShutdownMode = ShutdownMode.OnExplicitShutdown;
+            //ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
             // Wait for keyboard shortcut
 
-            PromtWindow promtWindow = new();
+            PromptWindow promtWindow = new();
             promtWindow.Show();
         }
     }
