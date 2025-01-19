@@ -2,6 +2,7 @@
 {
     internal class Settings
     {
+        public string SHORTCUT { get; set; }
         public string OPENAI_API_KEY { get; set; }
         public string OPENAI_API_URL { get; set; }
         public string OPENAI_MODEL { get; set; }

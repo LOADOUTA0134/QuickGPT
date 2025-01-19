@@ -6,10 +6,22 @@
         xmlns:local="clr-namespace:QuickGPT.Windows"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="Settings" Height="500" Width="800"
+        Title="Settings" Height="600" Width="800"
         Background="#383838" Foreground="White"
         FontFamily="Cascadia Mono" FontSize="16">
     <StackPanel>
+        <Label Content="Shortcut"
+               Foreground="White"
+               Margin="10 10 10 0"/>
+        <TextBox x:Name="TextBoxShortcut"
+                 Background="#545454"
+                 Foreground="White"
+                 VerticalAlignment="Center"
+                 Margin="10 0 10 10"
+                 Padding="5"
+                 BorderThickness="0"
+                 PreviewKeyDown="TextBoxShortcut_PreviewKeyDown"/>
+
         <Label Content="OpenAI API Key"
                Foreground="White"
                Margin="10 10 10 0"/>

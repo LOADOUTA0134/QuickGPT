@@ -1,8 +1,8 @@
 ﻿using System.Drawing;
 using System.Windows;
 using System.Windows.Forms;
-using NHotkey;
-using NHotkey.Wpf;
+using QuickGPT.Classes;
+using QuickGPT.Logic;
 using QuickGPT.Windows;
 
 namespace QuickGPT
@@ -15,22 +15,16 @@ namespace QuickGPT
 
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
-            CreateTrayIcon();
+            Settings settings = SettingsManager.GetSettings();
+            ShortcutManager.RegisterHotkeyFromString(settings.SHORTCUT);
 
-            HotkeyManager.Current.AddOrReplace("QuickGPT_GlobalHotkey", System.Windows.Input.Key.S, System.Windows.Input.ModifierKeys.Alt, HotKeyPressed);
+            CreateTrayIcon();
         }
 
         protected override void OnExit(ExitEventArgs e)
         {
-            HotkeyManager.Current.Remove("QuickGPT_GlobalHotkey");
+            ShortcutManager.RemoveHotkey();
             base.OnExit(e);
-        }
-
-        private void HotKeyPressed(object? sender, HotkeyEventArgs e)
-        {
-            PromptWindow promptWindow = new();
-            promptWindow.Show();
-            promptWindow.Activate();
         }
 
         private void CreateTrayIcon()
