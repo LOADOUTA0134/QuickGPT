@@ -6,10 +6,23 @@
         xmlns:local="clr-namespace:QuickGPT.Windows"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="Settings" Height="600" Width="800"
+        Title="Settings" Height="800" Width="800"
         Background="#383838" Foreground="White"
         FontFamily="Cascadia Mono" FontSize="16">
     <StackPanel>
+        <StackPanel Orientation="Horizontal"
+                    VerticalAlignment="Center">
+            <Label Content="Auto start on system start"
+                   Foreground="White"
+                   Margin="10"/>
+            <CheckBox x:Name="CheckBoxAutoStart"
+                      Background="#545454"
+                      Foreground="White"
+                      Margin="10"
+                      Height="17"
+                      BorderThickness="2"/>
+        </StackPanel>
+
         <Label Content="Shortcut"
                Foreground="White"
                Margin="10 10 10 0"/>

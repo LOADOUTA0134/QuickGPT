@@ -23,13 +23,22 @@ namespace QuickGPT.Logic
         public static void SaveSettings(Settings newSettings)
         {
             settings = newSettings;
-            if (string.IsNullOrWhiteSpace(newSettings.SHORTCUT))
+            if (string.IsNullOrWhiteSpace(settings.SHORTCUT))
             {
                 ShortcutManager.RemoveHotkey();
             }
             else
             {
                 ShortcutManager.RegisterHotkeyFromString(settings.SHORTCUT);
+            }
+
+            if (settings.AUTOSTART)
+            {
+                AutoStartManager.EnableAutoStart();
+            }
+            else
+            {
+                AutoStartManager.DisableAutoStart();
             }
 
             string json = JsonConvert.SerializeObject(newSettings);
@@ -72,6 +81,7 @@ namespace QuickGPT.Logic
         {
             Settings defaultSettings = new()
             {
+                AUTOSTART = true,
                 SHORTCUT = "",
                 OPENAI_API_KEY = "your-api-key",
                 OPENAI_API_URL = "https://api.openai.com/v1/chat/completions",

@@ -17,6 +17,7 @@ namespace QuickGPT.Windows
         private void LoadSettings()
         {
             Settings settings = SettingsManager.GetSettings();
+            CheckBoxAutoStart.IsChecked = settings.AUTOSTART;
             TextBoxShortcut.Text = settings.SHORTCUT;
             TextBoxOpenAiApiKey.Text = settings.OPENAI_API_KEY;
             TextBoxOpenAiApiUrl.Text = settings.OPENAI_API_URL;
@@ -69,8 +70,15 @@ namespace QuickGPT.Windows
                 return;
             }
 
+            bool autoStart = false;
+            if (CheckBoxAutoStart.IsChecked != null)
+            {
+                autoStart = (bool)CheckBoxAutoStart.IsChecked;
+            }
+
             Settings settings = new()
             {
+                AUTOSTART = autoStart,
                 SHORTCUT = TextBoxShortcut.Text,
                 OPENAI_API_KEY = TextBoxOpenAiApiKey.Text,
                 OPENAI_API_URL = TextBoxOpenAiApiUrl.Text,
