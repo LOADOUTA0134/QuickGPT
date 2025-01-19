@@ -10,7 +10,7 @@ namespace QuickGPT.Classes
         {
             NotifyIcon trayIcon = new()
             {
-                Icon = SystemIcons.Application, // TODO
+                Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath),
                 Text = "QuickGPT",
                 Visible = true,
                 ContextMenuStrip = new ContextMenuStrip()
