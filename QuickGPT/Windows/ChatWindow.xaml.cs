@@ -24,6 +24,7 @@ namespace QuickGPT
             MessageTextBox.Focus();
 
             chat = new(this);
+
             _ = chat.StreamResponseAsync(prompt);
         }
 

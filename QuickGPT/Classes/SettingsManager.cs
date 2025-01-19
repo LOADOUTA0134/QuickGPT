@@ -86,7 +86,7 @@ namespace QuickGPT.Logic
                 OPENAI_API_KEY = "your-api-key",
                 OPENAI_API_URL = "https://api.openai.com/v1/chat/completions",
                 OPENAI_MODEL = "gpt-4o",
-                SYSTEM_MESSAGE = "You are a helpful assistant. Keep your answers short, simple and informative.",
+                SYSTEM_MESSAGE = "You are a helpful assistant.",
                 UPDATE_INTERVAL = 30
             };
             return defaultSettings;

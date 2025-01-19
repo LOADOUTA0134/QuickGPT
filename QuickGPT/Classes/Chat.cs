@@ -69,38 +69,42 @@ namespace QuickGPT.Logic
             using Stream stream = await response.Content.ReadAsStreamAsync();
             using StreamReader reader = new(stream);
 
-            // Read stream until end
-            StringBuilder answerStringBuilder = new();
-            StringBuilder chunkStringBuilder = new();
-            while (!reader.EndOfStream)
+            // Using a task for stream reading so it doesn't take all resources
+            await Task.Run(async () =>
             {
-                string? line = await reader.ReadLineAsync();
-                if (!string.IsNullOrWhiteSpace(line) && line.StartsWith("data: "))
+                // Read stream until end
+                StringBuilder answerStringBuilder = new();
+                StringBuilder chunkStringBuilder = new();
+                while (!reader.EndOfStream)
                 {
-                    string jsonStr = line["data: ".Length..].Trim();
-                    if (jsonStr == "[DONE]")
+                    string? line = await reader.ReadLineAsync();
+                    if (!string.IsNullOrWhiteSpace(line) && line.StartsWith("data: "))
                     {
-                        if (chunkStringBuilder.Length > 0)
+                        string jsonStr = line["data: ".Length..].Trim();
+                        if (jsonStr == "[DONE]")
                         {
-                            await chatWindow.StreamResponseCallback(chunkStringBuilder.ToString());
+                            if (chunkStringBuilder.Length > 0)
+                            {
+                                await chatWindow.StreamResponseCallback(chunkStringBuilder.ToString());
+                            }
+                            AddMessageToHistory("assistant", answerStringBuilder.ToString());
+                            break;
                         }
-                        AddMessageToHistory("assistant", answerStringBuilder.ToString());
-                        break;
-                    }
 
-                    string chunk = GetContentFromJsonStr(jsonStr);
-                    if (!string.IsNullOrEmpty(chunk))
-                    {
-                        chunkStringBuilder.Append(chunk);
-                        answerStringBuilder.Append(chunk);
-                        if (chunkStringBuilder.Length > settings.UPDATE_INTERVAL)
+                        string chunk = GetContentFromJsonStr(jsonStr);
+                        if (!string.IsNullOrEmpty(chunk))
                         {
-                            await chatWindow.StreamResponseCallback(chunkStringBuilder.ToString());
-                            chunkStringBuilder = new StringBuilder();
+                            chunkStringBuilder.Append(chunk);
+                            answerStringBuilder.Append(chunk);
+                            if (chunkStringBuilder.Length > settings.UPDATE_INTERVAL)
+                            {
+                                await chatWindow.StreamResponseCallback(chunkStringBuilder.ToString());
+                                chunkStringBuilder = new StringBuilder();
+                            }
                         }
                     }
                 }
-            }
+            });
         }
 
         /**
