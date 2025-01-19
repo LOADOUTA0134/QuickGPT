@@ -12,7 +12,7 @@
         LostKeyboardFocus="Window_LostKeyboardFocus">
     <Grid>
         <TextBox x:Name="TextBoxPrompt"
-                 FontFamily="Cascadia Mono"
+                 FontFamily="Arial"
                  FontSize="20"
                  Background="#545454"
                  Foreground="White"

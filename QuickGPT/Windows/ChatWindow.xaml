@@ -6,9 +6,9 @@
         xmlns:local="clr-namespace:QuickGPT"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="ChatWindow" Height="800" Width="1200"
+        Title="Chat" Height="900" Width="1200"
         Background="#383838" Foreground="White"
-        FontFamily="Cascadia Mono" FontSize="16">
+        FontFamily="Arial" FontSize="16">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
