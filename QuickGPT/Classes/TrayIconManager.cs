@@ -19,13 +19,15 @@ namespace QuickGPT.Classes
             trayIcon.ContextMenuStrip.Items.Add("Open Prompt", null, (s, e) =>
             {
                 PromptWindow promtWindow = new();
-                promtWindow.Show();
+                try { promtWindow.Show(); }
+                catch { }
             });
 
             trayIcon.ContextMenuStrip.Items.Add("Settings", null, (s, e) =>
             {
                 SettingsWindow settingsWindow = new();
-                settingsWindow.Show();
+                try { settingsWindow.Show(); }
+                catch { }
             });
             trayIcon.ContextMenuStrip.Items.Add("Exit", null, (s, e) => application.Shutdown());
         }

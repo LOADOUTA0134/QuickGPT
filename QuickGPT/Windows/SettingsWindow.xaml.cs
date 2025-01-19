@@ -7,9 +7,20 @@ namespace QuickGPT.Windows
 {
     public partial class SettingsWindow : Window
     {
+        private static SettingsWindow? instance;
+
         public SettingsWindow()
         {
             InitializeComponent();
+
+            if (instance != null)
+            {
+                MessageBox.Show("Close existing setting window to open new one");
+                Close();
+                return;
+            }
+
+            instance = this;
 
             LoadSettings();
         }
@@ -98,6 +109,11 @@ namespace QuickGPT.Windows
             LoadSettings();
 
             System.Windows.MessageBox.Show("Settings have been reset.");
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            instance = null;
         }
     }
 }
