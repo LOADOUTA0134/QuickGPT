@@ -68,8 +68,6 @@ namespace QuickGPT.Classes
         private static void HotkeyAction(object? sender, HotkeyEventArgs e)
         {
             PromptWindow promptWindow = new();
-            promptWindow.Show();
-            promptWindow.Activate();
         }
     }
 }

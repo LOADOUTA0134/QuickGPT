@@ -18,6 +18,8 @@ namespace QuickGPT
         {
             InitializeComponent();
 
+            Show();
+
             SendMessage(prompt, true);
             MessageTextBox.Focus();
 

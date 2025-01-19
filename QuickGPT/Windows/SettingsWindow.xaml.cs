@@ -22,6 +22,8 @@ namespace QuickGPT.Windows
 
             instance = this;
 
+            Show();
+
             LoadSettings();
         }
 

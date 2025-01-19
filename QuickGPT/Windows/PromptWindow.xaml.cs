@@ -9,6 +9,9 @@ namespace QuickGPT
             InitializeComponent();
 
             TextBoxPrompt.Focus();
+
+            Show();
+            Activate();
         }
 
         /**
@@ -30,8 +33,7 @@ namespace QuickGPT
                 return;
             }
 
-            ChatWindow chatWindow = new(TextBoxPrompt.Text);
-            chatWindow.Show();
+            _ = new ChatWindow(TextBoxPrompt.Text);
 
             // Close() is not needed here because focus is lost when opening new window (and closes this window then).
             // Keep in mind that Close() is needed maybe if some handling with the lost focus is changed
