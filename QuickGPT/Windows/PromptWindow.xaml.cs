@@ -16,6 +16,15 @@ namespace QuickGPT
          */
         private void TextBoxPrompt_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
+            if (e.Key == System.Windows.Input.Key.Escape)
+            {
+                try
+                {
+                    Close();
+                }
+                catch { }
+                return;
+            }
             if (e.Key != System.Windows.Input.Key.Enter)
             {
                 return;
@@ -34,7 +43,11 @@ namespace QuickGPT
          */
         private void Window_LostKeyboardFocus(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
         {
-            Close();
+            try
+            {
+                Close();
+            }
+            catch { }
         }
     }
 }
