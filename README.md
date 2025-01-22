@@ -13,6 +13,9 @@
 - Markdown support
 - Multiple lines for prompting in Chat Window (e.g. Shift + Enter)
 - Copy messages / Code Blocks
+- Choose the model from a list in the Settings Window
+- Auto Updater
+- Temperature / Max Tokens / ... in Settings Window
 
 ## Screenshots
 ### Quickly Prompt after pressing your hotkey
