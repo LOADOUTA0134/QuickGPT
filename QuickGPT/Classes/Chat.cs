@@ -85,7 +85,7 @@ namespace QuickGPT.Logic
                         {
                             if (chunkStringBuilder.Length > 0)
                             {
-                                await chatWindow.StreamResponseCallback(chunkStringBuilder.ToString());
+                                await chatWindow.StreamResponseCallback(answerStringBuilder.ToString());
                             }
                             AddMessageToHistory("assistant", answerStringBuilder.ToString());
                             break;
@@ -98,7 +98,7 @@ namespace QuickGPT.Logic
                             answerStringBuilder.Append(chunk);
                             if (chunkStringBuilder.Length > settings.UPDATE_INTERVAL)
                             {
-                                await chatWindow.StreamResponseCallback(chunkStringBuilder.ToString());
+                                await chatWindow.StreamResponseCallback(answerStringBuilder.ToString());
                                 chunkStringBuilder = new StringBuilder();
                             }
                         }

@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
+using MdXaml;
 using QuickGPT.Logic;
 
 namespace QuickGPT
@@ -9,7 +10,8 @@ namespace QuickGPT
     public partial class ChatWindow : Window
     {
         private readonly Chat chat;
-        private TextBox? currentTextBox; // used for editing, usually null except it's being used
+        private readonly Markdown engine;
+        private RichTextBox? currentRichTextBox; // used for editing, usually null except it's being used
 
         /**
          * Constructor is called on first prompt
@@ -17,6 +19,8 @@ namespace QuickGPT
         public ChatWindow(string prompt)
         {
             InitializeComponent();
+
+            engine = new Markdown();
 
             Show();
 
@@ -30,19 +34,18 @@ namespace QuickGPT
 
         /**
          * Callback method, gets called over and over while receiving streaming response
-         * Minimum length of chunk to call this method can be set in settings by user
          * Creates new message or edits existing one
          */
-        public async Task StreamResponseCallback(string chunk)
+        public async Task StreamResponseCallback(string message)
         {
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
-                if (currentTextBox == null)
+                if (currentRichTextBox == null)
                 {
-                    currentTextBox = SendMessage(chunk, false);
+                    currentRichTextBox = SendMessage(message, false);
                     return;
                 }
-                EditMessage(currentTextBox, chunk);
+                EditMessage(currentRichTextBox, message);
             }, DispatcherPriority.Render);
         }
 
@@ -75,15 +78,15 @@ namespace QuickGPT
         /**
          * Called when first chunk of new message is received
          * This creates a whole new text bubble on either right or left side
-         * Returns TextBox so it can be edited when new chunk comes
-         * Sets currentTextBox to null if message is from user,
+         * Returns RichTextBox so it can be edited when new chunk comes
+         * Sets currentRichTextBox to null if message is from user,
          * if this doesnt happen the next stream will edit the previous message
          */
-        private TextBox SendMessage(string message, bool isUser)
+        private RichTextBox SendMessage(string message, bool isUser)
         {
             if (isUser)
             {
-                currentTextBox = null;
+                currentRichTextBox = null;
             }
 
             Border messageBorder = new()
@@ -96,33 +99,32 @@ namespace QuickGPT
                 BorderThickness = new Thickness(0)
             };
 
-            TextBox messageTextBlock = new()
+            RichTextBox messageRichTextBox = new()
             {
-                TextWrapping = TextWrapping.Wrap,
-                Text = message,
                 IsReadOnly = true,
                 Foreground = Brushes.White,
                 BorderThickness = new Thickness(0),
-                Background = Brushes.Transparent
+                Background = Brushes.Transparent,
+                Document = engine.Transform(message)
             };
 
-            messageBorder.Child = messageTextBlock;
+            messageBorder.Child = messageRichTextBox;
 
             MessagesStackPanel.Children.Add(messageBorder);
 
             MessagesScrollViewer.ScrollToBottom();
 
-            return messageTextBlock;
+            return messageRichTextBox;
         }
 
         /**
          * Edits an existing message
-         * Called when first chunk of streaming response already created the message
+         * Called when first chunk of streaming response already created the message (and RichTextBox)
          * and it only has to be updated
          */
-        private void EditMessage(TextBox textBlock, string chunk)
+        private void EditMessage(RichTextBox richTextBox, string newMessage)
         {
-            textBlock.Text += chunk;
+            richTextBox.Document = engine.Transform(newMessage);
         }
     }
 }
