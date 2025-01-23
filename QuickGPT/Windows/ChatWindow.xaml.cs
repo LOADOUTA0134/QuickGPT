@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
-using MdXaml;
+using QuickGPT.Classes;
 using QuickGPT.Logic;
 
 namespace QuickGPT
@@ -10,7 +10,7 @@ namespace QuickGPT
     public partial class ChatWindow : Window
     {
         private readonly Chat chat;
-        private readonly Markdown engine;
+        private readonly MarkdownManager markdownManager;
         private RichTextBox? currentRichTextBox; // used for editing, usually null except it's being used
 
         /**
@@ -20,7 +20,7 @@ namespace QuickGPT
         {
             InitializeComponent();
 
-            engine = new Markdown();
+            markdownManager = new();
 
             Show();
 
@@ -105,7 +105,7 @@ namespace QuickGPT
                 Foreground = Brushes.White,
                 BorderThickness = new Thickness(0),
                 Background = Brushes.Transparent,
-                Document = engine.Transform(message)
+                Document = markdownManager.Markdown2FlowDocument(message)
             };
 
             messageBorder.Child = messageRichTextBox;
@@ -124,7 +124,7 @@ namespace QuickGPT
          */
         private void EditMessage(RichTextBox richTextBox, string newMessage)
         {
-            richTextBox.Document = engine.Transform(newMessage);
+            richTextBox.Document = markdownManager.Markdown2FlowDocument(newMessage);
         }
     }
 }
