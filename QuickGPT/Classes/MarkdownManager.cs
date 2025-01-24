@@ -16,6 +16,9 @@ namespace QuickGPT.Classes
         private readonly Markdown engine;
         private FlowDocument document;
 
+        /**
+         * Inits the engine and sets the code style
+         */
         public MarkdownManager()
         {
             engine = new();
@@ -30,6 +33,11 @@ namespace QuickGPT.Classes
             document = new();
         }
 
+        /**
+         * Creates a FlowDocument from a markdown string
+         * Transforms the markdown by the library
+         * Also applys custom changes to heading 1-3 and code blocks
+         */
         public FlowDocument Markdown2FlowDocument(string markdown)
         {
             document = engine.Transform(markdown);
@@ -41,6 +49,10 @@ namespace QuickGPT.Classes
             return document;
         }
 
+        /**
+         * Transforms the headings and code blocks by looping through the document blocks
+         * Calls the other private methods below
+         */
         private void TransformBlocks()
         {
             Style heading1Style = new(typeof(Paragraph));
@@ -79,6 +91,10 @@ namespace QuickGPT.Classes
             }
         }
 
+        /**
+         * Gets the code blocks (TextEditor) in the list and changes the style of them
+         * Is recursive, so it works for a code block in a list in a list in a list ...
+         */
         private void HandleList(List list)
         {
             foreach (var listItem in list.ListItems)
@@ -100,6 +116,9 @@ namespace QuickGPT.Classes
             }
         }
 
+        /**
+         * Here the changes to the given TextEditor happen
+         */
         private void ModifyTextEditor(TextEditor textEditor)
         {
             textEditor.Background = new SolidColorBrush(Color.FromRgb(54, 54, 54));
@@ -128,6 +147,9 @@ namespace QuickGPT.Classes
             }
         }
 
+        /**
+         * Changes the SyntaxHighlighting of, for example, a string inside a TextEditor
+         */
         private void ChangeHighlightingColor(TextEditor textEditor, string item, Color color)
         {
             HighlightingColor highlightingColor = textEditor.SyntaxHighlighting.GetNamedColor(item);
