@@ -14,12 +14,27 @@ namespace QuickGPT.Classes
         private readonly Markdown engine;
         private FlowDocument document;
 
+        private readonly Style heading1Style;
+        private readonly Style heading2Style;
+        private readonly Style heading3Style;
+
         /**
          * Inits the engine and sets the code style
          */
         public MarkdownManager()
         {
             engine = new();
+
+            heading1Style = new(typeof(Paragraph));
+            heading1Style.Setters.Add(new Setter(Paragraph.FontSizeProperty, 22.0));
+            heading1Style.Setters.Add(new Setter(Paragraph.FontWeightProperty, FontWeights.Bold));
+
+            heading2Style = new(typeof(Paragraph));
+            heading2Style.Setters.Add(new Setter(Paragraph.FontSizeProperty, 20.0));
+            heading2Style.Setters.Add(new Setter(Paragraph.FontWeightProperty, FontWeights.SemiBold));
+
+            heading3Style = new(typeof(Paragraph));
+            heading3Style.Setters.Add(new Setter(Paragraph.FontSizeProperty, 18.0));
 
             var codeStyle = new Style(typeof(Run));
             codeStyle.Setters.Add(new Setter(Run.FontFamilyProperty, new FontFamily("Consolas")));
@@ -53,17 +68,6 @@ namespace QuickGPT.Classes
          */
         private void TransformBlocks()
         {
-            Style heading1Style = new(typeof(Paragraph));
-            heading1Style.Setters.Add(new Setter(Paragraph.FontSizeProperty, 22.0));
-            heading1Style.Setters.Add(new Setter(Paragraph.FontWeightProperty, FontWeights.Bold));
-
-            Style heading2Style = new(typeof(Paragraph));
-            heading2Style.Setters.Add(new Setter(Paragraph.FontSizeProperty, 20.0));
-            heading2Style.Setters.Add(new Setter(Paragraph.FontWeightProperty, FontWeights.SemiBold));
-
-            Style heading3Style = new(typeof(Paragraph));
-            heading3Style.Setters.Add(new Setter(Paragraph.FontSizeProperty, 18.0));
-
             for (int i = 0; i < document.Blocks.Count; i++)
             {
                 Block block = document.Blocks.ElementAt(i);
@@ -74,7 +78,14 @@ namespace QuickGPT.Classes
                     {
                         case "Heading1": paragraph.Style = heading1Style; break;
                         case "Heading2": paragraph.Style = heading2Style; break;
-                        case "Heading3": paragraph.Style = heading2Style; break;
+                        case "Heading3": paragraph.Style = heading3Style; break;
+                    }
+                    foreach (Inline inline in paragraph.Inlines)
+                    {
+                        if (inline is Hyperlink hyperlink)
+                        {
+                            hyperlink.Foreground = new SolidColorBrush(Colors.LightBlue);
+                        }
                     }
                 }
                 else if (block is BlockUIContainer blockUIContainer)
@@ -110,6 +121,22 @@ namespace QuickGPT.Classes
                         {
                             document.Blocks.InsertAfter(blockUIContainer, GetCodeParagraph(textEditor.Text));
                             document.Blocks.Remove(blockUIContainer);
+                        }
+                    }
+                    else if (listItemBlock is Paragraph paragraph)
+                    {
+                        switch (paragraph.Tag?.ToString())
+                        {
+                            case "Heading1": paragraph.Style = heading1Style; break;
+                            case "Heading2": paragraph.Style = heading2Style; break;
+                            case "Heading3": paragraph.Style = heading2Style; break;
+                        }
+                        foreach (Inline inline in paragraph.Inlines)
+                        {
+                            if (inline is Hyperlink hyperlink)
+                            {
+                                hyperlink.Foreground = new SolidColorBrush(Colors.LightBlue);
+                            }
                         }
                     }
                     else if (listItemBlock is List innerList)
