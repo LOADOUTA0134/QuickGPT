@@ -110,7 +110,7 @@ namespace QuickGPT.Classes
                     }
                     else if (listItemBlock is List innerList)
                     {
-                        HandleList(innerList);
+                        HandleList(innerList); // recursive call
                     }
                 }
             }
@@ -128,8 +128,6 @@ namespace QuickGPT.Classes
             textEditor.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
             textEditor.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
             textEditor.Padding = new Thickness(10);
-            textEditor.IsReadOnly = true;
-            textEditor.ShowLineNumbers = true;
 
             if (textEditor.SyntaxHighlighting != null)
             {
