@@ -94,7 +94,7 @@ namespace QuickGPT.Classes
                 {
                     if (blockUIContainer.Child is TextEditor textEditor)
                     {
-                        document.Blocks.InsertAfter(blockUIContainer, GetCodeParagraph(textEditor.Text));
+                        document.Blocks.InsertAfter(blockUIContainer, GetNewCodeParagraph(textEditor.Text));
                         document.Blocks.Remove(blockUIContainer);
                     }
                 }

@@ -25,7 +25,6 @@ namespace QuickGPT
         {
             if (e.Key == System.Windows.Input.Key.Escape)
             {
-                e.Handled = true;
                 try
                 {
                     Close();
@@ -35,7 +34,10 @@ namespace QuickGPT
             }
             if (e.Key != System.Windows.Input.Key.Enter)
             {
-                e.Handled = true;
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(TextBoxPrompt.Text.Trim()))
+            {
                 return;
             }
 
