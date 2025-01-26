@@ -15,12 +15,17 @@ namespace QuickGPT
         }
 
         /**
+         * Events
+         */
+
+        /**
          * Waits for enter to open chat window that will then perform the openai call etc.
          */
         private void TextBoxPrompt_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == System.Windows.Input.Key.Escape)
             {
+                e.Handled = true;
                 try
                 {
                     Close();
@@ -30,6 +35,7 @@ namespace QuickGPT
             }
             if (e.Key != System.Windows.Input.Key.Enter)
             {
+                e.Handled = true;
                 return;
             }
 

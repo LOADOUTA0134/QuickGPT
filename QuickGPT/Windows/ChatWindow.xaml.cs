@@ -32,7 +32,7 @@ namespace QuickGPT
 
             Show();
 
-            SendMessage(prompt, true);
+            CreateNewMessage(prompt, true);
             MessageTextBox.IsEnabled = false;
 
             _ = chat.StreamResponseAsync(prompt);
@@ -48,10 +48,10 @@ namespace QuickGPT
             {
                 if (currentRichTextBox == null)
                 {
-                    currentRichTextBox = SendMessage(chunk, false);
+                    currentRichTextBox = CreateNewMessage(chunk, false);
                     return;
                 }
-                EditMessage(currentRichTextBox, chunk);
+                EditExistingMessage(currentRichTextBox, chunk);
             }, DispatcherPriority.Render);
         }
 
@@ -80,41 +80,16 @@ namespace QuickGPT
          */
         public void ErrorCallback(string message)
         {
-            SendMessage(message, false);
+            CreateNewMessage(message, false);
             MessageTextBox.IsEnabled = true;
             MessageTextBox.Focus();
-        }
-
-        /**
-         * KeyDown Event, waits for enter so the new message can be sent
-         */
-        private void MessageTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter && Keyboard.Modifiers != ModifierKeys.Shift)
-            {
-                e.Handled = true;
-
-                string message = MessageTextBox.Text.Trim();
-
-                if (string.IsNullOrWhiteSpace(message))
-                {
-                    return;
-                }
-
-                SendMessage(message, true);
-
-                _ = chat.StreamResponseAsync(message);
-
-                MessageTextBox.IsEnabled = false;
-                MessageTextBox.Clear();
-            }
         }
 
         /**
          * Called when first chunk of new message is received
          * Returns RichTextBox so it can be edited when new chunk comes
          */
-        private RichTextBox SendMessage(string message, bool isUser)
+        private RichTextBox CreateNewMessage(string message, bool isUser)
         {
             Border messageBorder = new()
             {
@@ -155,9 +130,39 @@ namespace QuickGPT
          * Called when first chunk of streaming response already created the message (and RichTextBox)
          * and it only has to be updated
          */
-        private void EditMessage(RichTextBox richTextBox, string chunk)
+        private void EditExistingMessage(RichTextBox richTextBox, string chunk)
         {
             richTextBox.AppendText(chunk);
+        }
+
+        /**
+         * Events
+         */
+
+        /**
+         * KeyDown Event, waits for enter press (without shift) so the new message can be sent
+         * Disables the MessageTextBox
+         */
+        private void MessageTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter && Keyboard.Modifiers != ModifierKeys.Shift)
+            {
+                e.Handled = true;
+
+                string message = MessageTextBox.Text.Trim();
+
+                if (string.IsNullOrWhiteSpace(message))
+                {
+                    return;
+                }
+
+                CreateNewMessage(message, true);
+
+                _ = chat.StreamResponseAsync(message);
+
+                MessageTextBox.IsEnabled = false;
+                MessageTextBox.Clear();
+            }
         }
     }
 }

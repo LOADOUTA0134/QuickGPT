@@ -72,7 +72,7 @@ namespace QuickGPT.Logic
             // Using a task for stream reading so it doesn't take all resources
             await Task.Run(async () =>
             {
-                // Read stream until end
+                // Read stream until end and send callbacks
                 StringBuilder answerStringBuilder = new();
                 StringBuilder chunkStringBuilder = new();
                 while (!reader.EndOfStream)
@@ -81,6 +81,8 @@ namespace QuickGPT.Logic
                     if (!string.IsNullOrWhiteSpace(line) && line.StartsWith("data: "))
                     {
                         string jsonStr = line["data: ".Length..].Trim();
+
+                        // This executes when done
                         if (jsonStr == "[DONE]")
                         {
                             if (chunkStringBuilder.Length > 0)
@@ -92,6 +94,7 @@ namespace QuickGPT.Logic
                             break;
                         }
 
+                        // This executes when not done yet
                         string chunk = GetContentFromJsonStr(jsonStr);
                         if (!string.IsNullOrEmpty(chunk))
                         {

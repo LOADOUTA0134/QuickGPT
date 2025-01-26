@@ -8,6 +8,13 @@ namespace QuickGPT
     {
         private static Mutex? _mutex;
 
+        /**
+         * On app startup event
+         * - Creates mutex for only 1 instance
+         * - Sets ShutdownMode to prevent shutdown
+         * - Load settings & hotkey from file
+         * - Create tray icon
+         */
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -28,6 +35,11 @@ namespace QuickGPT
             TrayIconManager.CreateTrayIcon(this);
         }
 
+        /**
+         * On app shutdown event
+         * - Remove hotkey
+         * - Release mutex
+         */
         protected override void OnExit(ExitEventArgs e)
         {
             ShortcutManager.RemoveHotkey();

@@ -9,6 +9,10 @@ namespace QuickGPT.Windows
     {
         private static SettingsWindow? instance;
 
+        /**
+         * Loads settings
+         * If another settings window is open the new windows closes with a MessageBox info
+         */
         public SettingsWindow()
         {
             InitializeComponent();
@@ -39,6 +43,13 @@ namespace QuickGPT.Windows
             TextBoxUpdateInterval.Text = settings.UPDATE_INTERVAL.ToString();
         }
 
+        /**
+         * Events
+         */
+
+        /**
+         * Listen for hotkey to set it
+         */
         private void TextBoxShortcut_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             e.Handled = true;
@@ -75,11 +86,14 @@ namespace QuickGPT.Windows
             }
         }
 
+        /**
+         * Save settings when button pressed
+         */
         private void Button_Click_Save(object sender, RoutedEventArgs e)
         {
             if (!int.TryParse(TextBoxUpdateInterval.Text, out int updateInterval))
             {
-                System.Windows.MessageBox.Show("Update Interval must be a number!");
+                MessageBox.Show("Update Interval must be a number!");
                 return;
             }
 
@@ -102,17 +116,25 @@ namespace QuickGPT.Windows
 
             SettingsManager.SaveSettings(settings);
 
-            System.Windows.MessageBox.Show("Settings have been saved.");
+            MessageBox.Show("Settings have been saved.");
         }
 
+        /**
+         * Reset settings
+         */
         private void Button_Click_Reset(object sender, RoutedEventArgs e)
         {
             SettingsManager.ResetSettings();
             LoadSettings();
 
-            System.Windows.MessageBox.Show("Settings have been reset.");
+            MessageBox.Show("Settings have been reset.");
         }
 
+        /**
+         * Set instance to null when closing window
+         * This is because only 1 settings window can be open
+         * As long as an instance is there a new window cannot be opened
+         */
         private void Window_Closed(object sender, EventArgs e)
         {
             instance = null;

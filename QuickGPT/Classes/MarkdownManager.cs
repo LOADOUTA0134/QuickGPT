@@ -10,6 +10,9 @@ namespace QuickGPT.Classes
     {
         private const string FONT_FAMILY = "Arial";
         private const double FONT_SIZE = 16.0;
+        private const double FONT_SIZE_HEADING_1 = 22.0;
+        private const double FONT_SIZE_HEADING_2 = 20.0;
+        private const double FONT_SIZE_HEADING_3 = 18.0;
 
         private readonly Markdown engine;
         private FlowDocument document;
@@ -26,15 +29,15 @@ namespace QuickGPT.Classes
             engine = new();
 
             heading1Style = new(typeof(Paragraph));
-            heading1Style.Setters.Add(new Setter(Paragraph.FontSizeProperty, 22.0));
+            heading1Style.Setters.Add(new Setter(Paragraph.FontSizeProperty, FONT_SIZE_HEADING_1));
             heading1Style.Setters.Add(new Setter(Paragraph.FontWeightProperty, FontWeights.Bold));
 
             heading2Style = new(typeof(Paragraph));
-            heading2Style.Setters.Add(new Setter(Paragraph.FontSizeProperty, 20.0));
+            heading2Style.Setters.Add(new Setter(Paragraph.FontSizeProperty, FONT_SIZE_HEADING_2));
             heading2Style.Setters.Add(new Setter(Paragraph.FontWeightProperty, FontWeights.SemiBold));
 
             heading3Style = new(typeof(Paragraph));
-            heading3Style.Setters.Add(new Setter(Paragraph.FontSizeProperty, 18.0));
+            heading3Style.Setters.Add(new Setter(Paragraph.FontSizeProperty, FONT_SIZE_HEADING_3));
 
             var codeStyle = new Style(typeof(Run));
             codeStyle.Setters.Add(new Setter(Run.FontFamilyProperty, new FontFamily("Consolas")));
@@ -49,7 +52,7 @@ namespace QuickGPT.Classes
         /**
          * Creates a FlowDocument from a markdown string
          * Transforms the markdown by the library
-         * Also applys custom changes to heading 1-3 and code blocks
+         * Calls private method for transforming more in the document
          */
         public FlowDocument Markdown2FlowDocument(string markdown)
         {
@@ -63,8 +66,7 @@ namespace QuickGPT.Classes
         }
 
         /**
-         * Transforms the headings and code blocks by looping through the document blocks
-         * Calls the other private methods below
+         * Transforms the headings code blocks and hyperlinks by looping through the document blocks
          */
         private void TransformBlocks()
         {
@@ -104,8 +106,8 @@ namespace QuickGPT.Classes
         }
 
         /**
-         * Gets the code blocks (TextEditor) in the list and changes the style of them
-         * Is recursive, so it works for a code block in a list in a list in a list ...
+         * Gets items blocks in list and applys changes for headings, code blocks and hyperlinks
+         * Is recursive for lists in lists
          */
         private void HandleList(List list)
         {
@@ -115,15 +117,7 @@ namespace QuickGPT.Classes
                 for (int j = 0; j < listItem.Blocks.Count; j++)
                 {
                     Block listItemBlock = listItem.Blocks.ElementAt(j);
-                    if (listItemBlock is BlockUIContainer blockUIContainer)
-                    {
-                        if (blockUIContainer.Child is TextEditor textEditor)
-                        {
-                            document.Blocks.InsertAfter(blockUIContainer, GetCodeParagraph(textEditor.Text));
-                            document.Blocks.Remove(blockUIContainer);
-                        }
-                    }
-                    else if (listItemBlock is Paragraph paragraph)
+                    if (listItemBlock is Paragraph paragraph)
                     {
                         switch (paragraph.Tag?.ToString())
                         {
@@ -139,6 +133,14 @@ namespace QuickGPT.Classes
                             }
                         }
                     }
+                    else if (listItemBlock is BlockUIContainer blockUIContainer)
+                    {
+                        if (blockUIContainer.Child is TextEditor textEditor)
+                        {
+                            document.Blocks.InsertAfter(blockUIContainer, GetNewCodeParagraph(textEditor.Text));
+                            document.Blocks.Remove(blockUIContainer);
+                        }
+                    }
                     else if (listItemBlock is List innerList)
                     {
                         HandleList(innerList); // recursive self call
@@ -147,7 +149,7 @@ namespace QuickGPT.Classes
             }
         }
 
-        private Paragraph GetCodeParagraph(string text)
+        private Paragraph GetNewCodeParagraph(string text)
         {
             Paragraph p = new()
             {
