@@ -128,7 +128,7 @@ namespace QuickGPT.Classes
                 Foreground = new SolidColorBrush(Colors.White),
                 FontFamily = new FontFamily("Consolas"),
                 Padding = new Thickness(10),
-                Margin = new Thickness(10)
+                Margin = new Thickness(5)
             };
             p.Inlines.Add(new Run(text));
 

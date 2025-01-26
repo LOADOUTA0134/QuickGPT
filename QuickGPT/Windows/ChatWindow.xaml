@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:QuickGPT"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="Chat" Height="900" Width="1200"
+        Title="Chat" Height="500" Width="800"
         Background="#383838" Foreground="White"
         FontFamily="Arial" FontSize="16">
     <Grid>
@@ -21,14 +21,17 @@
             <StackPanel x:Name="MessagesStackPanel"/>
         </ScrollViewer>
 
-        <TextBox x:Name="MessageTextBox"
-                 Grid.Row="1"
-                 Margin="10"
-                 Padding="7"
-                 VerticalAlignment="Center"
-                 BorderThickness="0"
-                 Background="#545454"
-                 Foreground="White"
-                 KeyDown="MessageTextBox_KeyDown"/>
+        <Border Grid.Row="1"
+                Margin="5"
+                Padding="1"
+                Background="LightGray">
+            <TextBox x:Name="MessageTextBox"
+                     Padding="7"
+                     VerticalAlignment="Center"
+                     BorderThickness="0"
+                     Background="#545454"
+                     Foreground="White"
+                     KeyDown="MessageTextBox_KeyDown"/>
+        </Border>
     </Grid>
 </Window>

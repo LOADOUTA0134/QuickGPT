@@ -23,6 +23,11 @@ namespace QuickGPT
 
             markdownManager = new();
 
+            Width = SystemParameters.WorkArea.Width / 2;
+            Height = SystemParameters.WorkArea.Height / 1.5;
+            Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
+            Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
+
             Show();
 
             SendMessage(prompt);
