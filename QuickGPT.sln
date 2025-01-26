@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35707.178 d17.12
+VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickGPT", "QuickGPT\QuickGPT.csproj", "{09431BC1-C3D4-4F09-84FF-D2D164BB4B0E}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "QuickGPT Setup", "QuickGPT Setup\QuickGPT Setup.vdproj", "{FEA8DB0F-8358-49A1-8A39-84F3CB43629C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,8 @@ Global
 		{09431BC1-C3D4-4F09-84FF-D2D164BB4B0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09431BC1-C3D4-4F09-84FF-D2D164BB4B0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09431BC1-C3D4-4F09-84FF-D2D164BB4B0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEA8DB0F-8358-49A1-8A39-84F3CB43629C}.Debug|Any CPU.ActiveCfg = Debug
+		{FEA8DB0F-8358-49A1-8A39-84F3CB43629C}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
