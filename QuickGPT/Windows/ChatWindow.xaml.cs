@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using QuickGPT.Classes;
@@ -21,6 +22,7 @@ namespace QuickGPT
         {
             InitializeComponent();
 
+            chat = new(this);
             markdownManager = new();
 
             Width = SystemParameters.WorkArea.Width / 2;
@@ -30,10 +32,8 @@ namespace QuickGPT
 
             Show();
 
-            SendMessage(prompt);
-            MessageTextBox.Focus();
-
-            chat = new(this);
+            SendMessage(prompt, true);
+            MessageTextBox.IsEnabled = false;
 
             _ = chat.StreamResponseAsync(prompt);
         }
@@ -48,7 +48,7 @@ namespace QuickGPT
             {
                 if (currentRichTextBox == null)
                 {
-                    currentRichTextBox = SendMessage(chunk);
+                    currentRichTextBox = SendMessage(chunk, false);
                     return;
                 }
                 EditMessage(currentRichTextBox, chunk);
@@ -70,6 +70,8 @@ namespace QuickGPT
                     currentRichTextBox.Document = markdownManager.Markdown2FlowDocument(content);
                     currentRichTextBox = null;
                 }
+                MessageTextBox.IsEnabled = true;
+                MessageTextBox.Focus();
             });
         }
 
@@ -78,35 +80,41 @@ namespace QuickGPT
          */
         public void ErrorCallback(string message)
         {
-            SendMessage(message);
+            SendMessage(message, false);
+            MessageTextBox.IsEnabled = true;
+            MessageTextBox.Focus();
         }
 
         /**
          * KeyDown Event, waits for enter so the new message can be sent
          */
-        private void MessageTextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void MessageTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key != System.Windows.Input.Key.Enter)
+            if (e.Key == Key.Enter && Keyboard.Modifiers != ModifierKeys.Shift)
             {
-                return;
+                e.Handled = true;
+
+                string message = MessageTextBox.Text.Trim();
+
+                if (string.IsNullOrWhiteSpace(message))
+                {
+                    return;
+                }
+
+                SendMessage(message, true);
+
+                _ = chat.StreamResponseAsync(message);
+
+                MessageTextBox.IsEnabled = false;
+                MessageTextBox.Clear();
             }
-            if (string.IsNullOrWhiteSpace(MessageTextBox.Text))
-            {
-                return;
-            }
-
-            SendMessage(MessageTextBox.Text);
-
-            _ = chat.StreamResponseAsync(MessageTextBox.Text);
-
-            MessageTextBox.Clear();
         }
 
         /**
          * Called when first chunk of new message is received
          * Returns RichTextBox so it can be edited when new chunk comes
          */
-        private RichTextBox SendMessage(string message)
+        private RichTextBox SendMessage(string message, bool isUser)
         {
             Border messageBorder = new()
             {
@@ -124,10 +132,17 @@ namespace QuickGPT
                 BorderThickness = new Thickness(0),
                 Background = Brushes.Transparent,
             };
-            messageRichTextBox.AppendText(message);
+
+            if (isUser)
+            {
+                messageRichTextBox.Document = new FlowDocument(new Paragraph(new Run(message)));
+            }
+            else
+            {
+                messageRichTextBox.AppendText(message);
+            }
 
             messageBorder.Child = messageRichTextBox;
-
             MessagesStackPanel.Children.Add(messageBorder);
 
             MessagesScrollViewer.ScrollToBottom();

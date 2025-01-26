@@ -31,7 +31,11 @@
                      BorderThickness="0"
                      Background="#545454"
                      Foreground="White"
-                     KeyDown="MessageTextBox_KeyDown"/>
+                     TextWrapping="Wrap"
+                     AcceptsReturn="True"
+                     VerticalScrollBarVisibility="Auto"
+                     MaxHeight="200"
+                     PreviewKeyDown="MessageTextBox_PreviewKeyDown"/>
         </Border>
     </Grid>
 </Window>
