@@ -1,9 +1,7 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
 using ICSharpCode.AvalonEdit;
-using ICSharpCode.AvalonEdit.Highlighting;
 using MdXaml;
 
 namespace QuickGPT.Classes
@@ -66,8 +64,10 @@ namespace QuickGPT.Classes
             Style heading3Style = new(typeof(Paragraph));
             heading3Style.Setters.Add(new Setter(Paragraph.FontSizeProperty, 18.0));
 
-            foreach (Block block in document.Blocks)
+            for (int i = 0; i < document.Blocks.Count; i++)
             {
+                Block block = document.Blocks.ElementAt(i);
+
                 if (block is Paragraph paragraph)
                 {
                     switch (paragraph.Tag?.ToString())
@@ -81,7 +81,8 @@ namespace QuickGPT.Classes
                 {
                     if (blockUIContainer.Child is TextEditor textEditor)
                     {
-                        ModifyTextEditor(textEditor);
+                        document.Blocks.InsertAfter(blockUIContainer, GetCodeParagraph(textEditor.Text));
+                        document.Blocks.Remove(blockUIContainer);
                     }
                 }
                 else if (block is List list)
@@ -97,64 +98,41 @@ namespace QuickGPT.Classes
          */
         private void HandleList(List list)
         {
-            foreach (var listItem in list.ListItems)
+            for (int i = 0; i < list.ListItems.Count; i++)
             {
-                foreach (var listItemBlock in listItem.Blocks)
+                ListItem listItem = list.ListItems.ElementAt(i);
+                for (int j = 0; j < listItem.Blocks.Count; j++)
                 {
+                    Block listItemBlock = listItem.Blocks.ElementAt(j);
                     if (listItemBlock is BlockUIContainer blockUIContainer)
                     {
                         if (blockUIContainer.Child is TextEditor textEditor)
                         {
-                            ModifyTextEditor(textEditor);
+                            document.Blocks.InsertAfter(blockUIContainer, GetCodeParagraph(textEditor.Text));
+                            document.Blocks.Remove(blockUIContainer);
                         }
                     }
                     else if (listItemBlock is List innerList)
                     {
-                        HandleList(innerList); // recursive call
+                        HandleList(innerList); // recursive self call
                     }
                 }
             }
         }
 
-        /**
-         * Here the changes to the given TextEditor happen
-         */
-        private void ModifyTextEditor(TextEditor textEditor)
+        private Paragraph GetCodeParagraph(string text)
         {
-            textEditor.Background = new SolidColorBrush(Color.FromRgb(54, 54, 54));
-            textEditor.FontFamily = new("Consolas");
-            textEditor.Foreground = new SolidColorBrush(Colors.White);
-            textEditor.FontWeight = FontWeights.Regular;
-            textEditor.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
-            textEditor.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
-            textEditor.Padding = new Thickness(10);
-
-            if (textEditor.SyntaxHighlighting != null)
+            Paragraph p = new()
             {
-                foreach (var item in textEditor.SyntaxHighlighting.NamedHighlightingColors)
-                {
-                    item.Foreground = new SimpleHighlightingBrush(Colors.White);
-                    item.FontWeight = FontWeights.Regular;
-                }
+                Background = new SolidColorBrush(Color.FromRgb(54, 54, 54)),
+                Foreground = new SolidColorBrush(Colors.White),
+                FontFamily = new FontFamily("Consolas"),
+                Padding = new Thickness(10),
+                Margin = new Thickness(10)
+            };
+            p.Inlines.Add(new Run(text));
 
-                ChangeHighlightingColor(textEditor, "String", Colors.Gray);
-                ChangeHighlightingColor(textEditor, "NumberLiteral", Colors.Blue);
-                ChangeHighlightingColor(textEditor, "Comment", Colors.Green);
-                ChangeHighlightingColor(textEditor, "MethodCall", Colors.LightYellow);
-                ChangeHighlightingColor(textEditor, "Keywords", Colors.LightBlue);
-            }
-        }
-
-        /**
-         * Changes the SyntaxHighlighting of, for example, a string inside a TextEditor
-         */
-        private void ChangeHighlightingColor(TextEditor textEditor, string item, Color color)
-        {
-            HighlightingColor highlightingColor = textEditor.SyntaxHighlighting.GetNamedColor(item);
-            if (highlightingColor != null)
-            {
-                highlightingColor.Foreground = new SimpleHighlightingBrush(color);
-            }
+            return p;
         }
     }
 }
