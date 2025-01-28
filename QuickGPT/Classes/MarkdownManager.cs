@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
 using ICSharpCode.AvalonEdit;
@@ -137,8 +138,8 @@ namespace QuickGPT.Classes
                     {
                         if (blockUIContainer.Child is TextEditor textEditor)
                         {
-                            document.Blocks.InsertAfter(blockUIContainer, GetNewCodeParagraph(textEditor.Text));
-                            document.Blocks.Remove(blockUIContainer);
+                            listItem.Blocks.InsertAfter(blockUIContainer, GetNewCodeParagraph(textEditor.Text));
+                            listItem.Blocks.Remove(blockUIContainer);
                         }
                     }
                     else if (listItemBlock is List innerList)
