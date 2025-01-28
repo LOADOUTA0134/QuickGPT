@@ -4,7 +4,7 @@
 - HotKeys for quickly prompting
 - Chat Window for follow up questions
 - Markdown Support
-- Multi-Line Support for larget messages in chat (Shift + Enter)
+- Multi-Line Support for larger messages in chat (Shift + Enter)
 - Settings, for example:
   - Auto start on system start
   - Model
