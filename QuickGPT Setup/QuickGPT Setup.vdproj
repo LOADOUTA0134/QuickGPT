@@ -43,6 +43,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
         "Release"
         {
@@ -59,6 +67,22 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
+            }
         }
     }
     "Deployable"
@@ -177,8 +201,8 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:QuickGPT"
-        "ProductCode" = "8:{CBFEDC52-C71B-4C84-BD3C-7F5BDAF3201B}"
-        "PackageCode" = "8:{401D0111-AD29-44A3-954B-8C39655757D2}"
+        "ProductCode" = "8:{7A5C32F7-3352-4101-A3AE-2BD21556867D}"
+        "PackageCode" = "8:{65967627-8939-425E-BB73-CEAEE7E4C324}"
         "UpgradeCode" = "8:{B33DA03D-87BD-4F50-89B3-CAABA93037F5}"
         "AspNetVersion" = "8:"
         "RestartWWWService" = "11:FALSE"
