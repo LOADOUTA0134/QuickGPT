@@ -20,7 +20,7 @@
 ## Screenshots
 
 ### Short Demo Video
-https://github.com/user-attachments/assets/0bee4b94-6d14-42d2-9bd7-bd490d371cc8
+https://github.com/user-attachments/assets/d98d6381-78dd-4625-ad76-b2a1eafae9d5
 
 ### Changes settings
 ![Settings Window](https://github.com/user-attachments/assets/e4fb76a4-e34f-4b2d-a0f8-6351d1318d0e)
