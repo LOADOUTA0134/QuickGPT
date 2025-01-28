@@ -19,9 +19,6 @@
 
 ## Screenshots
 
-### Short Demo
-https://github.com/user-attachments/assets/572acdc0-4688-434a-a9b7-4ac7ca54e5f1
-
 ### Changes settings
 ![Settings Window](https://github.com/user-attachments/assets/e4fb76a4-e34f-4b2d-a0f8-6351d1318d0e)
 
